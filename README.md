@@ -136,10 +136,28 @@ Les skills `belgian-legal-research` et `legal-contract-review` mentionnent les o
 
 Sans ce MCP branché, les skills restent utiles (méthode + références NUMAC en local), mais Claude ne pourra pas valider en temps réel les citations. **Branche le MCP** pour profiter pleinement.
 
-Voir `../backend/mcp_server/README.md` pour la doc complète du serveur MCP et la gestion des clés API.
+Pour obtenir une clé API du MCP `docuralis-be` (qui débloque les outils de recherche), contacter Docuralis.
+
+## Installation rapide
+
+### Via git clone (Claude Code, Claude Desktop)
+
+```bash
+git clone https://github.com/NicolasHuberty/docuralis-skills.git ~/.claude/skills/docuralis
+```
+
+Les skills apparaîtront automatiquement à la prochaine session.
+
+### Via téléchargement (claude.ai)
+
+Récupère le repo en zip via https://github.com/NicolasHuberty/docuralis-skills/archive/refs/heads/main.zip et upload chaque dossier de skill via Settings → Skills.
+
+## Mises à jour
+
+```bash
+cd ~/.claude/skills/docuralis && git pull
+```
 
 ## Licence et redistribution
 
 Ces skills sont conçus pour les abonnés du service Docuralis. Le contenu (NUMAC, mapping thématique, méthodologie) est issu de l'expertise du cabinet et de l'analyse du droit belge — il s'apprécie en combinaison avec les outils MCP.
-
-Pour obtenir une clé API du MCP `docuralis-be` (qui débloque les outils de recherche), contacter Docuralis.
