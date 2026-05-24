@@ -75,9 +75,31 @@ Au prochain lancement de `claude`, Claude Code listera les skills disponibles et
 
 ### Option 3 — claude.ai (web)
 
-1. Settings → Capabilities → Skills → Upload (formats `.zip` du dossier d'un skill, un upload par skill).
-2. Settings → Connectors → "Add custom MCP server" → URL + Bearer.
-3. Active les skills voulus dans le sélecteur de chat.
+**Règle stricte de claude.ai** : un zip = un seul `SKILL.md`. Un méga-zip contenant les 5 sous-dossiers sera **refusé** avec « Zip must contain exactly one SKILL.md file ». Il faut donc **5 uploads séparés**, un zip par skill.
+
+1. Télécharge les 5 zips déjà découpés depuis la **GitHub release v1.0.0** :
+   - <https://github.com/NicolasHuberty/docuralis-skills/releases/tag/v1.0.0>
+   - `belgian-legal-research.zip`, `legal-reasoning.zip`, `legal-counter-argument.zip`, `legal-quality-review.zip`, `legal-contract-review.zip`
+
+2. Va sur <https://claude.ai/customize/skills> → bouton **« + »** → **« Charger un zip »** → choisis le premier zip. Répète pour les 4 autres.
+
+3. Pour chaque skill, bascule **« Activé par défaut »** (ou équivalent dans ton interface) — claude.ai chargera alors la skill dynamiquement quand sa `description` matche ta question (progressive disclosure, ne consomme pas de tokens si non pertinent).
+
+4. Pour brancher le MCP : <https://claude.ai/customize/connectors> → bouton **« + »** → nom libre + URL `https://api.docuralis.huberty.pro/mcp` (rien d'autre). claude.ai gère la DCR + OAuth automatiquement. À la première connexion, tu seras redirigé vers une page Docuralis pour coller ta clé API.
+
+**Alternative — Projet dédié** : si tu veux isoler ton usage juridique sans polluer tes autres chats, crée un **Projet** sur claude.ai et attache-y skills + connecteur. Chaque conversation lancée dans ce projet aura tout, et le reste de claude.ai reste propre.
+
+### Reproduire les zips localement (si tu modifies les skills)
+
+```bash
+git clone https://github.com/NicolasHuberty/docuralis-skills.git
+cd docuralis-skills
+for d in belgian-legal-research legal-reasoning legal-counter-argument legal-quality-review legal-contract-review; do
+  zip -r "$d.zip" "$d"
+done
+```
+
+Chaque zip généré contient exactement **1 `SKILL.md`** à la racine + (le cas échéant) ses `reference/*.md`.
 
 ### Option 4 — API Anthropic / Agent SDK
 
