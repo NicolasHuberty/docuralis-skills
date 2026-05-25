@@ -1,6 +1,6 @@
 # Docuralis — Skills juridiques belges pour Claude
 
-Cinq **skills Anthropic** modulaires qui transforment Claude (Desktop, Code, claude.ai, API) en un assistant juridique belge sérieux. À utiliser **en combinaison avec le MCP server `docuralis-be`** (`https://api.docuralis.huberty.pro/mcp/`) qui fournit les outils de recherche dans la législation, la jurisprudence et la BCE.
+Six **skills Anthropic** modulaires qui transforment Claude (Desktop, Code, claude.ai, API) en un assistant juridique belge sérieux. À utiliser **en combinaison avec le MCP server `docuralis-be`** (`https://api.docuralis.huberty.pro/mcp/`) qui fournit les outils de recherche dans la législation, la jurisprudence et la BCE.
 
 | Skill                         | Quand l'activer                                                                            |
 | ----------------------------- | ------------------------------------------------------------------------------------------ |
@@ -9,6 +9,7 @@ Cinq **skills Anthropic** modulaires qui transforment Claude (Desktop, Code, cla
 | `legal-counter-argument`      | Quand tu veux anticiper la position de la partie adverse / red team d'une thèse            |
 | `legal-quality-review`        | Avant de livrer — détecte hallucinations, articles abrogés, jurisprudence morte            |
 | `legal-contract-review`       | Audit d'un contrat avant signature (clauses dangereuses, B2B abusives, manquantes, RGPD)   |
+| `correction-conclusions`      | Relire un projet de conclusions / d'avis belge — méthodologie « escalier » Roland Huberty  |
 
 Chaque skill peut être chargé seul ou combiné. Les références détaillées (NUMAC des codes belges, synonymes juridiques) sont dans des sous-fichiers chargés à la demande (progressive disclosure).
 
@@ -27,8 +28,17 @@ skills/
 │   └── SKILL.md
 ├── legal-quality-review/
 │   └── SKILL.md
-└── legal-contract-review/
-    └── SKILL.md
+├── legal-contract-review/
+│   └── SKILL.md
+└── correction-conclusions/
+    ├── SKILL.md
+    ├── reference/
+    │   └── methodologie-detaillee.md       # Checklist 42 points + modèles de réécriture
+    └── scripts/
+        ├── extract_structure.py            # Parse .docx → JSON structure (Claude Code)
+        ├── apply_track_changes.py          # Track changes Word auto-signés (Claude Code)
+        ├── requirements.txt
+        └── example_operations.json
 ```
 
 Le frontmatter de chaque `SKILL.md` (`name`, `description`) suit la spec Anthropic Skills. La `description` explique **quand** activer le skill — Claude la lit pour décider seul de charger ou non.
@@ -75,13 +85,13 @@ Au prochain lancement de `claude`, Claude Code listera les skills disponibles et
 
 ### Option 3 — claude.ai (web)
 
-**Règle stricte de claude.ai** : un zip = un seul `SKILL.md`. Un méga-zip contenant les 5 sous-dossiers sera **refusé** avec « Zip must contain exactly one SKILL.md file ». Il faut donc **5 uploads séparés**, un zip par skill.
+**Règle stricte de claude.ai** : un zip = un seul `SKILL.md`. Un méga-zip contenant les 6 sous-dossiers sera **refusé** avec « Zip must contain exactly one SKILL.md file ». Il faut donc **6 uploads séparés**, un zip par skill.
 
-1. Télécharge les 5 zips déjà découpés depuis la **GitHub release v1.0.0** :
+1. Télécharge les 6 zips déjà découpés depuis la **GitHub release v1.0.0** :
    - <https://github.com/NicolasHuberty/docuralis-skills/releases/tag/v1.0.0>
-   - `belgian-legal-research.zip`, `legal-reasoning.zip`, `legal-counter-argument.zip`, `legal-quality-review.zip`, `legal-contract-review.zip`
+   - `belgian-legal-research.zip`, `legal-reasoning.zip`, `legal-counter-argument.zip`, `legal-quality-review.zip`, `legal-contract-review.zip`, `correction-conclusions.zip`
 
-2. Va sur <https://claude.ai/customize/skills> → bouton **« + »** → **« Charger un zip »** → choisis le premier zip. Répète pour les 4 autres.
+2. Va sur <https://claude.ai/customize/skills> → bouton **« + »** → **« Charger un zip »** → choisis le premier zip. Répète pour les 5 autres.
 
 3. Pour chaque skill, bascule **« Activé par défaut »** (ou équivalent dans ton interface) — claude.ai chargera alors la skill dynamiquement quand sa `description` matche ta question (progressive disclosure, ne consomme pas de tokens si non pertinent).
 
@@ -94,7 +104,7 @@ Au prochain lancement de `claude`, Claude Code listera les skills disponibles et
 ```bash
 git clone https://github.com/NicolasHuberty/docuralis-skills.git
 cd docuralis-skills
-for d in belgian-legal-research legal-reasoning legal-counter-argument legal-quality-review legal-contract-review; do
+for d in belgian-legal-research legal-reasoning legal-counter-argument legal-quality-review legal-contract-review correction-conclusions; do
   zip -r "$d.zip" "$d"
 done
 ```
@@ -140,6 +150,9 @@ Pas besoin d'instructions manuelles. Tu poses ta question, les skills s'activent
 
 ### Préparation de mémoire / conclusions
 → `belgian-legal-research` + `legal-reasoning` (thèse) + `legal-counter-argument` (red team) + `legal-quality-review` (audit final).
+
+### Relecture d'un projet de conclusions en cours d'amélioration
+→ `correction-conclusions` (méthodologie escalier + track changes Word) en principal, complété par `belgian-legal-research` si des citations doivent être vérifiées et `legal-quality-review` pour le contrôle de fond avant dépôt.
 
 ### Audit d'un contrat envoyé par la partie adverse
 → `legal-contract-review` (principal) + `belgian-legal-research` (sourcer les clauses problématiques) + `legal-quality-review` (audit du rapport).

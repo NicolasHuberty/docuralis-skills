@@ -1,0 +1,25 @@
+{
+  "author": "Docuralis — Correction conclusions",
+  "_comment": "Exemple — opérations typiques produites par Claude après audit méthodologique.",
+  "operations": [
+    {
+      "type": "insert_paragraph_after",
+      "find_in_paragraph": "DISCUSSION",
+      "paragraph": "Nous examinerons successivement (a) la compétence du tribunal de l'entreprise, (b) les conditions de fond de l'action contractuelle, et (c) le quantum du dommage subi par le concluant."
+    },
+    {
+      "type": "replace",
+      "find": "Le contrat prévoit que le concluant doit livrer dans les 30 jours.",
+      "replace": "L'article 4 du contrat stipule : « Le vendeur s'engage à effectuer la livraison dans un délai de trente jours calendrier à compter de la signature des présentes. » (pièce n° 3)."
+    },
+    {
+      "type": "insert_after",
+      "find": "Il en résulte que le congé est nul.",
+      "insert": " Le tribunal voudra par conséquent constater la nullité du congé notifié le 12 mai 2024 et condamner la partie adverse au paiement de l'indemnité compensatoire de préavis."
+    },
+    {
+      "type": "delete",
+      "find": "cfr nos premières conclusions du 15.03.2024"
+    }
+  ]
+}
